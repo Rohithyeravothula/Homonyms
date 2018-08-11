@@ -1,10 +1,16 @@
 package datamuse;
 
 
+import android.content.Intent;
+import android.os.Build;
+import android.speech.tts.TextToSpeech;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -15,6 +21,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 public class Words {
@@ -32,40 +39,29 @@ public class Words {
         return strToRespWordsList(br.readLine());
     }
 
-    private ArrayList<ResponseWord> strToRespWordsList(String json_string) throws IOException {
+    public static ArrayList<ResponseWord> strToRespWordsList(String json_string) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper.readValue(json_string, new TypeReference<List<ResponseWord>>(){});
     }
 
-    public void to_json_string() throws IOException {
-
-        ResponseWord respWord = new ResponseWord("hello", "32");
-        ObjectMapper mapper = new ObjectMapper();
-        System.out.println(mapper.writeValueAsString(respWord));
+    public String getHomophonesQuery(String word) throws IOException {
+        return api + "?sl=" + word;
     }
+}
+
+/*
+public void to_json_string() throws IOException {
+
+    ResponseWord respWord = new ResponseWord("hello", "32");
+    ObjectMapper mapper = new ObjectMapper();
+    System.out.println(mapper.writeValueAsString(respWord));
+}
 
     public void test_single_json() throws IOException {
 
         String test = "{\"word\":\"elephant\", \"score\":\"32\"}";
         ResponseWord dmword = (ResponseWord)new ObjectMapper().readValue(test, ResponseWord.class);
         System.out.println(dmword);
-    }
+    }*/
 
-    public List<ResponseWord> getHomophones(String word) throws IOException {
-        String query = api + "?sl=" + word;
-        return getWords(query);
-    }
-
-    public static void main(String[] args) throws IOException {
-        Words wrds = new Words();
-//        wrds.test_json();
-//        wrds.to_json_string();
-//        wrds.test_single_json();
-//        wrds.getWords("https://api.datamuse.com/words?sl=elefint");
-        List<ResponseWord> respWords = wrds.getHomophones("water");
-        for(ResponseWord w: respWords){
-            System.out.println(w);
-        }
-    }
-}
