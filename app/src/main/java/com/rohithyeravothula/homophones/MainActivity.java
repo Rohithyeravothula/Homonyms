@@ -2,6 +2,7 @@ package com.rohithyeravothula.homophones;
 
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
+                    tts.setPitch(1.2f);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         System.out.printf("TTS", "This Language is not supported");
                     }
@@ -92,7 +94,9 @@ public class MainActivity extends AppCompatActivity {
             responseString.append(s);
             responseString.append(delimiter);
         }
+        if(responseString.length() > 1)
         responseString.setLength(responseString.length() - 1);
+
         return responseString.toString();
     }
 
